@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <title>Names</title>
+    <script>
+      async function fetchNames() {
+    	var tabl = document.getElementById("table1");
+        const response = await fetch('http://localhost:8080/Servlet-2/Names');
+        const nameListHtml = await response.text();
+        <!--document.getElementById('name-list').innerHTML = nameListHtml;-->
+        var parsed = JSON.parse(nameListHtml);
+	        
+	        for(var i=0;i<parsed.length;i++){
+	            var row = tabl.insertRow(i+1);
+	            row.setAttribute('scope',"row");
+	            row.insertCell(0).innerHTML=parsed[i].name;
+	            row.insertCell(1).innerHTML=parsed[i].email;
+	            row.insertCell(2).innerHTML=parsed[i].password;
+	            row.insertCell(3).innerHTML=parsed[i].phone;
+	        }
+	  
+     }
+	
+      async function postName() {
+        const params = new URLSearchParams();
+        params.append('name', document.getElementById('name').value);
+        params.append('email', document.getElementById('email').value);
+        params.append('password', document.getElementById('password').value);
+        params.append('number', document.getElementById('number').value);
+        const fetchSettings = {method: 'POST', body: params};
+        const response =
+            await fetch('http://localhost:8080/Servlet-2/Names', fetchSettings);
+
+        fetchNames();
+      }
+    </script>
+    
+    <style>
+            table, th,td,tr {
+                border :2px solid black;
+                animation: bgColor 10s infinite alternate;
+                font-size:20px;
+
+            }
+            /*https://stackoverflow.com/questions/39725592/loop-div-background-color-through-all-rainbow-colors-gradually-css*/
+            @keyframes bgColor {
+            12.5% {
+                border :2px solid #FF0000;
+            }
+            25% {
+                border :2px solid #FFA500;
+            }
+            37.5% {
+                border :2px solid #FFFF00;
+            }
+            50% {
+                border :2px solid #7FFF00;
+            }
+            62.5% {
+                border :2px solid #00FFFF;
+            }
+            75% {
+                border :2px solid #0000FF;
+            }
+            87.5% {
+                border :2px solid #9932CC;
+            }
+            100% {
+                border :2px solid #2c0218;
+            }
+            }
+
+        </style>
+        
+        <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0" />
+  <meta http-equiv="cache-control" content="max-age=0" />
+  <meta http-equiv="expires" content="0" />
+  <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+  <meta http-equiv="pragma" content="no-cache" />
+  </head>
+  <body onload="fetchNames();">
+    <h1>Please enter your information</h1>
+	Name
+	<br>
+    <input type="text" id="name" >
+    <br>
+    Email
+	<br>
+    <input type="text" id="email">
+    <br>
+    Password
+	<br>
+    <input type="text" id="password">
+    <br>
+    Phone number
+	<br>
+    <input type="text" id="number">
+    <br><br>
+    <button onclick="postName();">Submit</button>
+
+    <hr>
+
+    <h1>Name List</h1>
+        <table id="table1" class="table table-dark">
+        <tr >
+            <th scope = "col">name</th><th scope = "col">email</th><th scope = "col">password</th><th scope = "col">phone</th>
+            
+        </tr>
+    </table>
+  </body>
+</html>
